@@ -8,7 +8,7 @@ GREEN := \e[32m
 #----------------------------------------------------------
 
 .PHONY: check
-check : unit-tests type-check black-format lint sphinx success
+check : unit-tests type-check black-format lint success
 
 .PHONY: unit-tests
 unit-tests :
