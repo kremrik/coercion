@@ -13,7 +13,7 @@ class test_coerce(unittest.TestCase):
     def test_falsy_schema(self):
         schema = {}
         record = {"foo": 1}
-        gold = {"foo": 1}
+        gold = {}
         output = coerce(schema, record)
         self.assertEqual(gold, output)
 
@@ -70,6 +70,27 @@ class test_coerce(unittest.TestCase):
         schema = {"foo": [{"bar": str}]}
         record = {"foo": [{"bar": 1.0}, {"bar": 2.0}]}
         gold = {"foo": [{"bar": "1.0"}, {"bar": "2.0"}]}
+        output = coerce(schema, record)
+        self.assertEqual(gold, output)
+
+    def test_removes_extra_key(self):
+        schema = {"foo": int}
+        record = {"foo": 1, "bar": 2}
+        gold = {"foo": 1}
+        output = coerce(schema, record)
+        self.assertEqual(gold, output)
+
+    def test_removes_extra_nested_key(self):
+        schema = {"foo": {"bar": int}}
+        record = {"foo": {"bar": 1, "baz": 2}}
+        gold = {"foo": {"bar": 1}}
+        output = coerce(schema, record)
+        self.assertEqual(gold, output)
+
+    def test_removes_extra_key_in_list(self):
+        schema = {"foo": [{"bar": int}]}
+        record = {"foo": [{"bar": 1, "baz": 2}]}
+        gold = {"foo": [{"bar": 1}]}
         output = coerce(schema, record)
         self.assertEqual(gold, output)
 
