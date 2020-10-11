@@ -22,10 +22,10 @@ def coerce(schema: dict, record: dict) -> dict:
             from coercion import coerce
 
             schema = {"foo": float, "bar": str}
-            record = {"foo": 1, "bar": 3.14}
+            record = {"foo": 1, "baz": 3.14}
 
             coerce(schema, record)
-            {'foo': 1.0, 'bar': '3.14'}
+            {'foo': 1.0, 'bar': None}
 
     Args:
         schema: A Python dict defining a schema
