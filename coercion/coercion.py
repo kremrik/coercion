@@ -39,6 +39,7 @@ def coerce(schema: dict, record: dict) -> dict:
     return deep_put(schema, trimmed)
 
 
+# ---------------------------------------------------------
 def deep_diff(d1: dict, d2: dict) -> dict:
     return diff_(
         d1=d1, d2=d2, list_strategy=_diff_list_strategy
@@ -63,6 +64,7 @@ def _diff_list_strategy(
     return diff
 
 
+# ---------------------------------------------------------
 def deep_cut(d1: dict, d2: dict) -> dict:
     return cut_(
         d1=d1, d2=d2, list_strategy=_cut_list_strategy
@@ -86,6 +88,7 @@ def _cut_list_strategy(
     return cut
 
 
+# ---------------------------------------------------------
 def deep_put(d1: dict, d2: dict) -> dict:
     return put_(
         d1=d1,
