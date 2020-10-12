@@ -67,5 +67,8 @@ coerce(schema, record)
 ...
 ValueError: foo -> bar -> baz: could not convert string to float: 'hi'
 ```
-Currently, it cannot provide reports for multiple exceptions; this
-functionality will (hopefully) be added in the near future, however.
+`coercion` is NOT a schema validator, and as such does not support any form of
+violation/exception reporting. This means that in the event of an error, you
+will see the first exception that `coerce` throws, but no more. There is
+possible functionality in the works to facilitate this, but it's currently not
+within the scope of the project.
