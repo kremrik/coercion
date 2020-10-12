@@ -1,1 +1,2 @@
 # coercion
+![](images/coercion.png)
