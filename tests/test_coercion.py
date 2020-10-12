@@ -108,11 +108,25 @@ class test_coerce(unittest.TestCase):
         output = coerce(schema, record)
         self.assertEqual(gold, output)
 
+    def test_adds_handles_single_extra_nested_key(self):
+        schema = {"foo": {"bar": int}}
+        record = {"foo": {"baz": 1}}
+        gold = {"foo": {"bar": None}}
+        output = coerce(schema, record)
+        self.assertEqual(gold, output)
+
     def test_adds_missing_key_in_list(self):
         schema = {"foo": [{"bar": int, "baz": int}]}
         record = {"foo": [{"bar": 1}]}
         gold = {"foo": [{"bar": 1, "baz": None}]}
         output = coerce(schema, record)
+        self.assertEqual(gold, output)
+
+    def test_specify_default_type(self):
+        schema = {"foo": int}
+        record = {}
+        gold = {"foo": 0}
+        output = coerce(schema, record, {int: 0})
         self.assertEqual(gold, output)
 
 

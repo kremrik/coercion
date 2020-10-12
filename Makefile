@@ -8,7 +8,7 @@ GREEN := \e[32m
 #----------------------------------------------------------
 
 .PHONY: check
-check : unit-tests type-check black-format lint success
+check : unit-tests doc-tests type-check black-format flake8-lint success
 
 .PHONY: unit-tests
 unit-tests :
@@ -16,6 +16,13 @@ unit-tests :
 	@echo -e '$(BLUE)unit-tests'
 	@echo -e        '----------$(NO_COLOR)'
 	@python3 -m pytest ./*/test*.py
+
+.PHONY: doc-tests
+doc-tests :
+	@echo
+	@echo -e '$(BLUE)doc-tests'
+	@echo -e        '---------$(NO_COLOR)'
+	@python3 -m doctest $(MODULE)/coercion.py && echo 0
 
 .PHONY: type-check
 type-check :
@@ -32,7 +39,7 @@ black-format :
 	@black $(MODULE) -l $(LINE_LENGTH)
 
 .PHONY: flake8-lint
-lint :
+flake8-lint :
 	@echo
 	@echo -e '$(BLUE)flake8-lint'
 	@echo -e 		'-----------$(NO_COLOR)'
