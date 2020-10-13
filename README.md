@@ -61,12 +61,12 @@ coerce(schema, record)
 from coercion import coerce
 
 schema2 = {"foo": [float]}
-record2 = {"foo": "[1, 2, 3]"}
+record2 = {"foo": "[1, 2, 3]"}  # list is a string
 coerce(schema2, record2)
 {'foo': [1.0, 2.0, 3.0]}
 
 schema3 = {"foo": {"bar": str}}
-record3 = {"foo": '{"bar": 1}'}
+record3 = {"foo": '{"bar": 1}'}  # dict is a string
 coerce(schema3, record3)
 {'foo': {'bar': '1'}}
 ```
