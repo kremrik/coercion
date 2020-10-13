@@ -37,6 +37,7 @@ black-format :
 	@echo -e '$(BLUE)black-format'
 	@echo -e 		'------------$(NO_COLOR)'
 	@black $(MODULE) -l $(LINE_LENGTH)
+	@black tests/*.py -l $(LINE_LENGTH)
 
 .PHONY: flake8-lint
 flake8-lint :

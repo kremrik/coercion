@@ -1,12 +1,13 @@
 # coercion
 ![](images/coercion.png)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ### Why coercion?
 Two reasons:
 1. It's good to have a "gatekeeper" at the bounds of applications where data
 may be missing fields, have messed up types, etc
-1. `coercion` is pure Python - no DSL's, no custom objects, no serialization;
-if you know how to create a dictionary, you already know how to use it
+1. `coercion` schemas are just Python - no DSL's, no custom objects, no serde;
+if you know how to create a dictionary, you already know everything necessary
 
 ### Examples
 
@@ -52,6 +53,21 @@ coerce(schema, record)
         {"bar": "hi"}
     ]
 }
+```
+
+##### Operating with string representations
+```python
+from coercion import coerce
+
+schema2 = {"foo": [float]}
+record2 = {"foo": "[1, 2, 3]"}
+coerce(schema2, record2)
+{'foo': [1.0, 2.0, 3.0]}
+
+schema3 = {"foo": {"bar": str}}
+record3 = {"foo": '{"bar": 1}'}
+coerce(schema3, record3)
+{'foo': {'bar': '1'}}
 ```
 
 ##### Error reporting

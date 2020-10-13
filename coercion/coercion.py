@@ -1,6 +1,7 @@
 from map_ops.core import cut_, diff_, put_
 from copy import deepcopy
 from functools import partial, reduce
+from json import loads
 from typing import Any, List, Optional
 
 
@@ -27,13 +28,24 @@ def coerce(
 
             >>> schema = {"foo": float, "bar": str}
             >>> record = {"foo": 1, "baz": 3.14}
-
             >>> coerce(schema, record)
             {'foo': 1.0, 'bar': None}
 
             # you can change the default type like:
             >>> coerce(schema, record, {str: ""})
             {'foo': 1.0, 'bar': ''}
+
+            # what about lists behaving badly?
+            >>> schema2 = {"foo": [float]}
+            >>> record2 = {"foo": "[1, 2, 3]"}
+            >>> coerce(schema2, record2)
+            {'foo': [1.0, 2.0, 3.0]}
+
+            # what about json strings?
+            >>> schema3 = {"foo": {"bar": str}}
+            >>> record3 = {"foo": '{"bar": 1}'}
+            >>> coerce(schema3, record3)
+            {'foo': {'bar': '1'}}
 
     Args:
         schema: A Python dict defining a schema
@@ -77,7 +89,7 @@ def _diff_list_strategy(
 
     superset = reduce(lambda x, y: put_(x, y), record_val)
 
-    diff = type(schema_val)([diff_(superset, inner)])
+    diff = type(schema_val)([deep_diff(superset, inner)])
     return diff
 
 
@@ -91,6 +103,7 @@ def deep_cut(d1: dict, d2: dict) -> dict:
 def _cut_list_strategy(
     record_val: List[Any], schema_val: List[Any]
 ) -> List[Any]:
+    print(record_val, schema_val)
     if isinstance(schema_val, set):
         schema_val = deepcopy(schema_val)
         inner = schema_val.pop()
@@ -100,7 +113,7 @@ def _cut_list_strategy(
     if not isinstance(inner, dict):
         return record_val
 
-    fnc = partial(cut_, inner)
+    fnc = partial(deep_cut, inner)
     cut = type(schema_val)(map(fnc, record_val))
     return cut
 
@@ -110,24 +123,46 @@ def deep_put(defaults: dict, d1: dict, d2: dict) -> dict:
     return put_(
         d1=d1,
         d2=d2,
-        on_missing=partial(_put_on_missing, defaults),
-        on_match=_put_on_match,
+        on_missing=partial(_on_missing, defaults),
+        on_mismatch=partial(_on_mismatch, defaults),
         list_strategy=partial(
             _put_list_strategy, defaults
         ),
     )
 
 
-def _put_on_missing(
-    defaults: dict, schema_val: type
-) -> Any:
+def _on_missing(defaults: dict, schema_val: type) -> Any:
     _defaults = {**DEFAULTS, **defaults}
     return _schema_to_defaults(_defaults, schema_val)
 
 
-def _put_on_match(
-    schema_val: type, record_val: Any
+def _on_mismatch(
+    defaults: dict, schema_val: Any, record_val: Any
 ) -> Any:
+    if isinstance(schema_val, list) and isinstance(
+        record_val, str
+    ):
+        try:
+            record_val = loads(record_val)
+            return _put_list_strategy(
+                defaults, schema_val, record_val
+            )
+        except Exception:
+            # catch below
+            pass
+
+    if isinstance(schema_val, dict) and isinstance(
+        record_val, str
+    ):
+        try:
+            record_val = loads(record_val)
+            return deep_put(
+                defaults, schema_val, record_val
+            )
+        except Exception:
+            # catch below
+            pass
+
     return schema_val(record_val)
 
 

@@ -129,6 +129,41 @@ class test_coerce(unittest.TestCase):
         output = coerce(schema, record, {int: 0})
         self.assertEqual(gold, output)
 
+    def test_extra_nested_lists(self):
+        schema = {
+            "foo": {"bar": [{"baz": [{"qux": float}]}]}
+        }
+        record = {
+            "foo": {
+                "bar": [
+                    {"baz": [{"qux": 1}, {"dur": "hi"}]}
+                ]
+            }
+        }
+        gold = {
+            "foo": {
+                "bar": [
+                    {"baz": [{"qux": 1}, {"qux": None}]}
+                ]
+            }
+        }
+        output = coerce(schema, record)
+        self.assertEqual(gold, output)
+
+    def test_convert_string_list_to_list(self):
+        schema = {"foo": [float]}
+        record = {"foo": "[1, 2, 3]"}
+        gold = {"foo": [1.0, 2.0, 3.0]}
+        output = coerce(schema, record)
+        self.assertEqual(gold, output)
+
+    def test_convert_string_dict_to_dict(self):
+        schema = {"foo": {"bar": float}}
+        record = {"foo": '{"bar": 1}'}
+        gold = {"foo": {"bar": 1.0}}
+        output = coerce(schema, record)
+        self.assertEqual(gold, output)
+
 
 if __name__ == "__main__":
     unittest.main()
