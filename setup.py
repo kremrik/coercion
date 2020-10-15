@@ -3,7 +3,7 @@ import re
 from setuptools import find_packages, setup
 
 
-DESCRIPTION = ""
+DESCRIPTION = "A dead-simple schema framework"
 AUTHOR = "Kyle Emrick"
 GITID = "kremrik"
 
