@@ -164,6 +164,8 @@ class test_coerce(unittest.TestCase):
         output = coerce(schema, record)
         self.assertEqual(gold, output)
 
+    # need test for exceptions
+
 
 if __name__ == "__main__":
     unittest.main()

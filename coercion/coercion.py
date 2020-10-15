@@ -191,9 +191,9 @@ def _unwind_exception(e_args: tuple) -> str:
     if len(e_args) == 1:
         return str(e_args[0])
     if not isinstance(e_args[1], tuple):
-        return f"{e_args[0]}: {e_args[1]}"
+        return "{}: {}".format(e_args[0], e_args[1])
     if len(e_args[1]) <= 1:
-        return f"{e_args[0]}: {e_args[1][0]}"
+        return "{}: {}".format(e_args[0], e_args[1][0])
     return (
         e_args[0] + " -> " + _unwind_exception(e_args[1])
     )
