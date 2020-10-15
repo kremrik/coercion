@@ -4,6 +4,15 @@
 ![coverage](images/coverage.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+### What is it?
+A dead-simple, dictionary-based, schema framework for shaping and _coercing_
+arbitrarily complex data
+
+### What is it _not_?
+A schema validatator. `coercion` makes every attempt to fill in the blanks and
+cast your data to the appropriate types, but employs a "fail fast" approach to
+exceptions and does not provide reporting.
+
 ### Why coercion?
 Two reasons:
 1. It's good to have a "gatekeeper" at the bounds of applications where data
@@ -85,8 +94,3 @@ coerce(schema, record)
 ...
 ValueError: foo -> bar -> baz: could not convert string to float: 'hi'
 ```
-`coercion` is NOT a schema validator, and as such does not support any form of
-violation/exception reporting. This means that in the event of an error, you
-will see the first exception that `coerce` throws, but no more. There is
-possible functionality in the works to facilitate this, but it's currently not
-within the scope of the project.
