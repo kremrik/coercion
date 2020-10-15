@@ -1,1 +1,1 @@
-
+git+git://github.com/kremrik/map-ops@master#egg=map-ops
