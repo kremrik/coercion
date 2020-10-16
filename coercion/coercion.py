@@ -100,10 +100,12 @@ def deep_cut(d1: dict, d2: dict) -> dict:
     )
 
 
+# TODO: rename `schema_val` to something like "original"
+# not sure why removing the deepcopy's from map_ops.core
+# causes problems here, but it does... bug?
 def _cut_list_strategy(
     record_val: List[Any], schema_val: List[Any]
 ) -> List[Any]:
-    print(record_val, schema_val)
     if isinstance(schema_val, set):
         schema_val = deepcopy(schema_val)
         inner = schema_val.pop()

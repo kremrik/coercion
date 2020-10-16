@@ -10,10 +10,12 @@ GITID = "kremrik"
 
 def get_package_name() -> str:
     packagefile = ".package-name"
-    package = open(packagefile, "rt")\
-        .read()\
-        .strip()\
+    package = (
+        open(packagefile, "rt")
+        .read()
+        .strip()
         .replace("-", "_")
+    )
     return package
 
 
@@ -33,7 +35,7 @@ def get_version() -> str:
             verstr = mo.group(1)
         else:
             raise RuntimeError("Error loading version")
-    
+
     return verstr
 
 
@@ -41,7 +43,9 @@ setup(
     name=get_package_name(),
     version=get_version(),
     author=AUTHOR,
-    url="https://github.com/{}/{}".format(GITID, get_package_name()),
+    url="https://github.com/{}/{}".format(
+        GITID, get_package_name()
+    ),
     description=DESCRIPTION,
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
