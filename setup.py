@@ -1,11 +1,20 @@
 import os
 import re
 from setuptools import find_packages, setup
+from typing import List
 
 
 DESCRIPTION = "A dead-simple schema framework"
 AUTHOR = "Kyle Emrick"
 GITID = "kremrik"
+
+
+def get_dependencies() -> List[str]:
+    depfile = "requirements.txt"
+    reqs = [
+        dep.strip() for dep in open(depfile).readlines()
+    ]
+    return reqs
 
 
 def get_package_name() -> str:
@@ -51,4 +60,5 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(exclude=("docs")),
     include_package_data=True,
+    install_requires=get_dependencies(),
 )
