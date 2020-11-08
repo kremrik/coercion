@@ -164,7 +164,20 @@ class test_coerce(unittest.TestCase):
         output = coerce(schema, record)
         self.assertEqual(gold, output)
 
-    # need test for exceptions
+    def test_throws_exception_on_bad_cast(self):
+        schema = {"foo": int}
+        record = {"foo": "hi"}
+        with self.assertRaises(ValueError):
+            coerce(schema, record)
+
+    def test_pseudo_immutability(self):
+        schema = {"foo": [{"bar": int, "baz": int}]}
+        record = {"foo": [{"bar": 1}]}
+        coerce(schema, record)
+        self.assertEqual(record, {"foo": [{"bar": 1}]})
+        self.assertEqual(
+            schema, {"foo": [{"bar": int, "baz": int}]}
+        )
 
 
 if __name__ == "__main__":
