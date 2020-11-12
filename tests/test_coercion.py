@@ -130,6 +130,7 @@ class test_coerce(unittest.TestCase):
         self.assertEqual(gold, output)
 
     def test_extra_nested_lists(self):
+        # NOTE problem test
         schema = {
             "foo": {"bar": [{"baz": [{"qux": float}]}]}
         }

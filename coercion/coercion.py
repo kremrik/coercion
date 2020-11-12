@@ -60,8 +60,13 @@ def coerce(
         defaults = {}
 
     try:
+        # print("RECORD", record, sep="\n")
         extras = deep_diff(record, schema)
+        # print("EXTRAS", extras, sep="\n")
+        # print("RECORD", record, sep="\n")
         trimmed = deep_cut(extras, record)
+        # print("EXTRAS", extras, sep="\n")
+        # print("TRIMMED", trimmed, sep="\n")
         return deep_put(defaults, schema, trimmed)
     except Exception as e:
         msg = _unwind_exception(e.args)
@@ -70,6 +75,9 @@ def coerce(
 
 # ---------------------------------------------------------
 def deep_diff(d1: dict, d2: dict) -> dict:
+    # print("D1", d1, sep="\n")
+    # print("D2", d2, sep="\n")
+    # print("----------------")
     return diff_(
         d1=d1, d2=d2, list_strategy=_diff_list_strategy
     )
@@ -87,7 +95,11 @@ def _diff_list_strategy(
     if not isinstance(inner, dict):
         return None
 
-    superset = reduce(lambda x, y: put_(x, y), record_val)
+    print("RECORD_VAL BEFORE", record_val, sep="\n")
+    superset = reduce(
+        lambda x, y: put_(x, y), record_val
+    )  # HERE is the problem
+    print("RECORD_VAL AFTER", record_val, sep="\n")
 
     diff = type(schema_val)([deep_diff(superset, inner)])
     return diff
@@ -95,6 +107,9 @@ def _diff_list_strategy(
 
 # ---------------------------------------------------------
 def deep_cut(d1: dict, d2: dict) -> dict:
+    # print("D1", d1, sep="\n")
+    # print("D2", d2, sep="\n")
+    # print("----------------")
     return cut_(
         d1=d1, d2=d2, list_strategy=_cut_list_strategy
     )
